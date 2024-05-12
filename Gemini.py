@@ -12,16 +12,21 @@ genai.configure(api_key=os.getenv("Google_API_KEY"))
 model = genai.GenerativeModel('gemini-pro-vision')
 
 def get_gemini_response(input, image, prompt):
+    print(type(image))
+    
     response = model.generate_content([input,image[0],prompt])
     return response.text
 
 def input_image_details(uploaded_file):
     if uploaded_file is not None:
         if uploaded_file.type == "application/pdf":
+            with open(uploaded_file, "rb") as f:
+                pdf_bytes = f.read()
+            return pdf_bytes
             # Convert PDF to images
-            images = convert_from_bytes(uploaded_file.read())
-            image_parts = [{"mime_type": "image/jpeg", "data": image.tobytes()} for image in images]
-            return image_parts
+            # images = convert_from_bytes(uploaded_file.read())
+            # image_parts = [{"mime_type": "image/jpeg", "data": image.tobytes()} for image in images]
+            #return image_parts
         elif uploaded_file.type in ["image/jpeg", "image/png"]:
             # Read image data
             bytes_data = uploaded_file.getvalue()
